@@ -1,0 +1,72 @@
+[project]
+name = "aelf-api-client"
+version = "0.1.1"
+authors = [
+    {name = "Thamin",email = "github@thamin.ovh"}
+]
+description = "Python client for the AELF API (https://api.aelf.org/)"
+readme = "README.md"
+requires-python = ">=3.13"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+
+[project.urls]
+Homepage = "https://github.com/thamin-i/aelf-api-client"
+Issues = "https://github.com/thamin-i/aelf-api-client/issues"
+
+[tool.poetry.dependencies]
+pydantic = "^2.11.3"
+aiohttp = "^3.11.16"
+async-timeout = "^5.0.1"
+
+[tool.poetry.group.dev.dependencies]
+isort = "^6.0.1"
+mypy = "^1.15.0"
+pre_commit = "^4.2.0"
+pylint = "^3.3.5"
+pytest = "^8.3.5"
+pytest-asyncio = "^0.26.0"
+ruff = "^0.11.0"
+
+[tool.poetry]
+package-mode = true
+include = ["*.yml"]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[[tool.poetry.source]]
+name = "PyPI"
+priority = "primary"
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.format]
+skip-magic-trailing-comma = true
+docstring-code-format = true
+
+[tool.isort]
+multi_line_output=3
+include_trailing_comma=true
+force_grid_wrap=0
+use_parentheses=true
+line_length=100
+
+[tool.mypy]
+exclude = "((.*/)*tests?)"
+ignore_missing_imports = true
+implicit_reexport = true
+strict = true
+show_error_codes = true
+pretty = true
+plugins = "pydantic.mypy"
+
+[tool.pylint."MESSAGES CONTROL"]
+max-line-length = 100
+disable = "C0114,C0115,C0116,R0801"
