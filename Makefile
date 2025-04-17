@@ -1,4 +1,4 @@
-SOURCE_DIR=aelf-client
+SOURCE_DIR=aelf_client
 PYTHON_BIN=.venv/bin/python3
 PIP_BIN=.venv/bin/pip
 POETRY_BIN=.venv/bin/poetry
