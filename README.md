@@ -42,15 +42,21 @@ from datetime import datetime
 import asyncio
 
 from aelf_api_client import AELFClient
-from aelf_api_client.schemas.enums import ZonesEnum
+from aelf_api_client.schemas.enums import ZoneEnum, EntityEnum
+from aelf_api_client.schemas.responses import MassesResponseModel
 
 async def main():
     client = AELFClient()
     date = datetime.now()
-    zone = ZonesEnum.FRANCE
+    zone = ZoneEnum.FRANCE
 
-    # Fetch masses
-    masses = await client.request_masses(date, zone)
+    masses: MassesResponseModel
+
+    # 2 ways to fetch a liturgical entity:
+    masses = await client.request_masses(date=date, zone=zone)
+    # or
+    masses = await client.request(entity=EntityEnum.MASS, date=date, zone=zone)
+
     print(masses)
 
 asyncio.run(main())
@@ -59,17 +65,18 @@ asyncio.run(main())
 ## Available Methods:
 The AELFClient provides the following methods:
 
-- `request_informations(date: datetime, zone: ZonesEnum)` -> **InformationsResponseModel**
-- `request_masses(date: datetime, zone: ZonesEnum)` -> **MassesResponseModel**
-- `request_complines(date: datetime, zone: ZonesEnum)` -> **CompliensResponseModel**
-- `request_lauds(date: datetime, zone: ZonesEnum)` -> **LaudsResponseModel**
-- `request_readings(date: datetime, zone: ZonesEnum)` -> **ReadingsResponseModel**
-- `request_none(date: datetime, zone: ZonesEnum)` -> **NoneResponseModel**
-- `request_sext(date: datetime, zone: ZonesEnum)` -> **SextResponseModel**
-- `request_terce(date: datetime, zone: ZonesEnum)` -> **TerceResponseModel**
-- `request_vespers(date: datetime, zone: ZonesEnum)` -> **VespersResponseModel**
+- `request(entity: EntityEnum, date: datetime, zone: ZonesEnum)`: Fetch any liturgical entity for a given day and zone
+- `request_informations(date: datetime, zone: ZonesEnum)`: Fetch informations for a given day and zone
+- `request_masses(date: datetime, zone: ZonesEnum)`: Fetch masses for a given day and zone
+- `request_complines(date: datetime, zone: ZonesEnum)`: Fetch comlines for a given day and zone
+- `request_lauds(date: datetime, zone: ZonesEnum)`: Fetch lauds for a given day and zone
+- `request_readings(date: datetime, zone: ZonesEnum)`: Fetch readings for a given day and zone
+- `request_none(date: datetime, zone: ZonesEnum)`: Fetch none for a given day and zone
+- `request_sext(date: datetime, zone: ZonesEnum)`: Fetch sext for a given day and zone
+- `request_terce(date: datetime, zone: ZonesEnum)`: Fetch terce for a given day and zone
+- `request_vespers(date: datetime, zone: ZonesEnum)`: Fetch vespers for a given day and zone
 
-Each method fetches data for a specific liturgical endpoint and returns a validated response model.
+Each method fetches data for a specific liturgical entity and returns a validated Pydantic response model.
 
 
 ## Development
