@@ -1,6 +1,6 @@
 [project]
 name = "aelf-api-client"
-version = "1.0.0"
+version = "1.0.1"
 authors = [
     {name = "Thamin",email = "github@thamin.ovh"}
 ]
@@ -19,9 +19,9 @@ Homepage = "https://github.com/thamin-i/aelf-api-client"
 Issues = "https://github.com/thamin-i/aelf-api-client/issues"
 
 [tool.poetry.dependencies]
-pydantic = "^2.11.3"
-aiohttp = "^3.11.16"
-async-timeout = "^5.0.1"
+pydantic = "^2.0.0"
+aiohttp = "^3.0.0"
+async-timeout = "^5.0.0"
 
 [tool.poetry.group.dev.dependencies]
 isort = "^6.0.1"
