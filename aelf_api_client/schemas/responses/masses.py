@@ -3,11 +3,11 @@ import typing as t
 from pydantic import BaseModel, ConfigDict, Field
 
 from aelf_api_client.schemas.informations import InformationsModel
-from aelf_api_client.schemas.messe import MesseModel
+from aelf_api_client.schemas.mass import MassModel
 
 
-class MessesResponseModel(BaseModel):
+class MassesResponseModel(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     informations: InformationsModel
-    messes: t.List[MesseModel] = Field(default=[])
+    messes: t.List[MassModel] = Field(default=[])

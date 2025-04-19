@@ -1,11 +1,11 @@
 from pydantic import BaseModel, ConfigDict
 
 from aelf_api_client.schemas.informations import InformationsModel
-from aelf_api_client.schemas.tierce import TierceModel
+from aelf_api_client.schemas.terce import TerceModel
 
 
-class TierceResponseModel(BaseModel):
+class TerceResponseModel(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     informations: InformationsModel
-    tierce: TierceModel
+    tierce: TerceModel

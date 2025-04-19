@@ -1,21 +1,21 @@
-from .complies import CompliesResponseModel
+from .complines import ComplinesResponseModel
 from .informations import InformationsResponseModel
-from .laudes import LaudesResponseModel
-from .lectures import LecturesResponseModel
-from .messes import MessesResponseModel
+from .lauds import LaudsResponseModel
+from .masses import MassesResponseModel
 from .none import NoneResponseModel
-from .sexte import SexteResponseModel
-from .tierce import TierceResponseModel
-from .vepres import VepresResponseModel
+from .readings import ReadingsResponseModel
+from .sext import SextResponseModel
+from .terce import TerceResponseModel
+from .vespers import VespersResponseModel
 
 __all__ = [
-    "CompliesResponseModel",
+    "ComplinesResponseModel",
     "InformationsResponseModel",
-    "LaudesResponseModel",
-    "LecturesResponseModel",
-    "MessesResponseModel",
+    "LaudsResponseModel",
+    "ReadingsResponseModel",
+    "MassesResponseModel",
     "NoneResponseModel",
-    "SexteResponseModel",
-    "TierceResponseModel",
-    "VepresResponseModel",
+    "SextResponseModel",
+    "TerceResponseModel",
+    "VespersResponseModel",
 ]

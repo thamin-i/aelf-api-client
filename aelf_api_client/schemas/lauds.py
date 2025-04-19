@@ -3,7 +3,7 @@ from pydantic import BaseModel, ConfigDict
 from .text import TextModel
 
 
-class LaudesModel(BaseModel):
+class LaudsModel(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     introduction: str

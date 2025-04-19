@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class ZonesEnum(Enum):
+class ZoneEnum(Enum):
     AFRIQUE = "afrique"
     BELGIQUE = "belgique"
     CANADA = "canada"

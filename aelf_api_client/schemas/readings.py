@@ -5,7 +5,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from .text import TextModel
 
 
-class LecturesModel(BaseModel):
+class ReadingsModel(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     introduction: str

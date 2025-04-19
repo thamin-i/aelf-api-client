@@ -1,11 +1,11 @@
 from pydantic import BaseModel, ConfigDict
 
 from aelf_api_client.schemas.informations import InformationsModel
-from aelf_api_client.schemas.lectures import LecturesModel
+from aelf_api_client.schemas.readings import ReadingsModel
 
 
-class LecturesResponseModel(BaseModel):
+class ReadingsResponseModel(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     informations: InformationsModel
-    lectures: LecturesModel
+    lectures: ReadingsModel

@@ -20,7 +20,7 @@ An unofficial Python client for interacting with the [AELF API](https://api.aelf
 ## Features
 
 - Fetch liturgical information for a specific date and zone.
-- Retrieve prayers such as `laudes`, `vepres`, `tierce`, `sexte`, and more.
+- Retrieve liturgical entities (`masses`, `complines`, `lauds`, `readings`, `none`, `sext`, `terce` or `vespers`) for a specific date and zone.
 - Built with `aiohttp` for asynchronous requests.
 - Validates API responses using `pydantic` models.
 
@@ -49,9 +49,9 @@ async def main():
     date = datetime.now()
     zone = ZonesEnum.FRANCE
 
-    # Fetch messes
-    messes = await client.request_messes(date, zone)
-    print(messes)
+    # Fetch masses
+    masses = await client.request_masses(date, zone)
+    print(masses)
 
 asyncio.run(main())
 ```
@@ -60,14 +60,14 @@ asyncio.run(main())
 The AELFClient provides the following methods:
 
 - `request_informations(date: datetime, zone: ZonesEnum)` -> **InformationsResponseModel**
-- `request_messes(date: datetime, zone: ZonesEnum)` -> **MessesResponseModel**
-- `request_complies(date: datetime, zone: ZonesEnum)` -> **CompliesResponseModel**
-- `request_laudes(date: datetime, zone: ZonesEnum)` -> **LaudesResponseModel**
-- `request_lectures(date: datetime, zone: ZonesEnum)` -> **LecturesResponseModel**
+- `request_masses(date: datetime, zone: ZonesEnum)` -> **MassesResponseModel**
+- `request_complines(date: datetime, zone: ZonesEnum)` -> **CompliensResponseModel**
+- `request_lauds(date: datetime, zone: ZonesEnum)` -> **LaudsResponseModel**
+- `request_readings(date: datetime, zone: ZonesEnum)` -> **ReadingsResponseModel**
 - `request_none(date: datetime, zone: ZonesEnum)` -> **NoneResponseModel**
-- `request_sexte(date: datetime, zone: ZonesEnum)` -> **SexteResponseModel**
-- `request_tierce(date: datetime, zone: ZonesEnum)` -> **TierceResponseModel**
-- `request_vepres(date: datetime, zone: ZonesEnum)` -> **VepresResponseModel**
+- `request_sext(date: datetime, zone: ZonesEnum)` -> **SextResponseModel**
+- `request_terce(date: datetime, zone: ZonesEnum)` -> **TerceResponseModel**
+- `request_vespers(date: datetime, zone: ZonesEnum)` -> **VespersResponseModel**
 
 Each method fetches data for a specific liturgical endpoint and returns a validated response model.
 

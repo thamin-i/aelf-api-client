@@ -5,17 +5,17 @@ import aiohttp
 import async_timeout
 from pydantic import BaseModel
 
-from .schemas.enums import ZonesEnum
+from .schemas.enums import EntityEnum, ZoneEnum
 from .schemas.responses import (
-    CompliesResponseModel,
+    ComplinesResponseModel,
     InformationsResponseModel,
-    LaudesResponseModel,
-    LecturesResponseModel,
-    MessesResponseModel,
+    LaudsResponseModel,
+    MassesResponseModel,
     NoneResponseModel,
-    SexteResponseModel,
-    TierceResponseModel,
-    VepresResponseModel,
+    ReadingsResponseModel,
+    SextResponseModel,
+    TerceResponseModel,
+    VespersResponseModel,
 )
 
 ResponseModel = t.TypeVar("ResponseModel", bound=BaseModel)
@@ -41,18 +41,29 @@ class AELFClient:
         """
         self.default_timeout = default_timeout
 
-    def __build_url(self, date: datetime, zone: ZonesEnum, endpoint: str) -> str:
+    def __build_url(self, date: datetime, zone: ZoneEnum, entity: EntityEnum) -> str:
         """Build the URL for the AELF API endpoint.
 
         Args:
             date (datetime): Date to fetch information for.
             zone (ZonesEnum): Liturgical zone to fetch information for.
-            endpoint (str): The API endpoint to call.
+            entity (EntityEnum): The liturgical entity to fetch information for.
 
         Returns:
             str: The constructed URL.
         """
-        return f"{self.base_url}/v1/{endpoint}/{date.strftime('%Y-%m-%d')}/{zone.value}"
+        fr_entity_mapping: t.Dict[EntityEnum, str] = {
+            EntityEnum.INFORMATIONS: "informations",
+            EntityEnum.MASS: "messes",
+            EntityEnum.COMPLINE: "complies",
+            EntityEnum.LAUDS: "laudes",
+            EntityEnum.READINGS: "lectures",
+            EntityEnum.NONE: "none",
+            EntityEnum.SEXT: "sexte",
+            EntityEnum.TERCE: "tierce",
+            EntityEnum.VESPERS: "vepres",
+        }
+        return f"{self.base_url}/v1/{fr_entity_mapping[entity]}/{date.strftime('%Y-%m-%d')}/{zone.value}"  # pylint: disable=line-too-long
 
     async def __request(self, url: str, model: t.Type[ResponseModel]) -> ResponseModel:
         """Request the AELF API and return the response model.
@@ -72,7 +83,7 @@ class AELFClient:
                     return model.model_validate(await response.json())
 
     async def request_informations(
-        self, date: datetime, zone: ZonesEnum
+        self, date: datetime, zone: ZoneEnum
     ) -> InformationsResponseModel:
         """Fetch liturgical information for a given date and zone.
 
@@ -84,117 +95,199 @@ class AELFClient:
             InformationsResponseModel: Liturgical information for the given date and zone.
         """
         return await self.__request(
-            url=self.__build_url(date, zone, "informations"), model=InformationsResponseModel
+            url=self.__build_url(date, zone, EntityEnum.INFORMATIONS),
+            model=InformationsResponseModel,
         )
 
-    async def request_messes(self, date: datetime, zone: ZonesEnum) -> MessesResponseModel:
-        """Fetch messes for a given date and zone.
+    async def request_masses(self, date: datetime, zone: ZoneEnum) -> MassesResponseModel:
+        """Fetch masses for a given date and zone.
 
         Args:
-            date (datetime): Date to fetch messes for.
+            date (datetime): Date to fetch masses for.
             zone (ZonesEnum): Liturgical zone to fetch information for.
 
         Returns:
-            MessesResponseModel: Messes for the given date and zone.
+            MassesResponseModel: Masses for the given date and zone.
         """
         return await self.__request(
-            url=self.__build_url(date, zone, "messes"), model=MessesResponseModel
+            url=self.__build_url(date, zone, EntityEnum.MASS), model=MassesResponseModel
         )
 
-    async def request_complies(self, date: datetime, zone: ZonesEnum) -> CompliesResponseModel:
-        """Fetch complies for a given date and zone.
+    async def request_complines(self, date: datetime, zone: ZoneEnum) -> ComplinesResponseModel:
+        """Fetch complines for a given date and zone.
 
         Args:
-            date (datetime): Date to fetch messes for.
+            date (datetime): Date to fetch complines for.
             zone (ZonesEnum): Liturgical zone to fetch information for.
 
         Returns:
-            CompliesResponseModel: Complies for the given date and zone.
+            ComplinesResponseModel: Complines for the given date and zone.
         """
         return await self.__request(
-            url=self.__build_url(date, zone, "complies"), model=CompliesResponseModel
+            url=self.__build_url(date, zone, EntityEnum.COMPLINE), model=ComplinesResponseModel
         )
 
-    async def request_laudes(self, date: datetime, zone: ZonesEnum) -> LaudesResponseModel:
-        """Fetch laudes for a given date and zone.
+    async def request_lauds(self, date: datetime, zone: ZoneEnum) -> LaudsResponseModel:
+        """Fetch lauds for a given date and zone.
 
         Args:
-            date (datetime): Date to fetch messes for.
+            date (datetime): Date to fetch lauds for.
             zone (ZonesEnum): Liturgical zone to fetch information for.
 
         Returns:
-            LaudesResponseModel: Laudes for the given date and zone.
+            LaudsResponseModel: Lauds for the given date and zone.
         """
         return await self.__request(
-            url=self.__build_url(date, zone, "laudes"), model=LaudesResponseModel
+            url=self.__build_url(date, zone, EntityEnum.LAUDS), model=LaudsResponseModel
         )
 
-    async def request_lectures(self, date: datetime, zone: ZonesEnum) -> LecturesResponseModel:
-        """Fetch lectures for a given date and zone.
+    async def request_readings(self, date: datetime, zone: ZoneEnum) -> ReadingsResponseModel:
+        """Fetch readings for a given date and zone.
 
         Args:
-            date (datetime): Date to fetch messes for.
+            date (datetime): Date to fetch readings for.
             zone (ZonesEnum): Liturgical zone to fetch information for.
 
         Returns:
-            LecturesResponseModel: Lectures for the given date and zone.
+            ReadingsResponseModel: Readings for the given date and zone.
         """
         return await self.__request(
-            url=self.__build_url(date, zone, "lectures"), model=LecturesResponseModel
+            url=self.__build_url(date, zone, EntityEnum.READINGS), model=ReadingsResponseModel
         )
 
-    async def request_none(self, date: datetime, zone: ZonesEnum) -> NoneResponseModel:
+    async def request_none(self, date: datetime, zone: ZoneEnum) -> NoneResponseModel:
         """Fetch none for a given date and zone.
 
         Args:
-            date (datetime): Date to fetch messes for.
+            date (datetime): Date to fetch none for.
             zone (ZonesEnum): Liturgical zone to fetch information for.
 
         Returns:
             NoneResponseModel: none for the given date and zone.
         """
         return await self.__request(
-            url=self.__build_url(date, zone, "none"), model=NoneResponseModel
+            url=self.__build_url(date, zone, EntityEnum.NONE), model=NoneResponseModel
         )
 
-    async def request_sexte(self, date: datetime, zone: ZonesEnum) -> SexteResponseModel:
-        """Fetch sexte for a given date and zone.
+    async def request_sext(self, date: datetime, zone: ZoneEnum) -> SextResponseModel:
+        """Fetch sext for a given date and zone.
 
         Args:
-            date (datetime): Date to fetch messes for.
+            date (datetime): Date to fetch sext for.
             zone (ZonesEnum): Liturgical zone to fetch information for.
 
         Returns:
-            SexteResponseModel: Sexte for the given date and zone.
+            SextResponseModel: Sext for the given date and zone.
         """
         return await self.__request(
-            url=self.__build_url(date, zone, "sexte"), model=SexteResponseModel
+            url=self.__build_url(date, zone, EntityEnum.SEXT), model=SextResponseModel
         )
 
-    async def request_tierce(self, date: datetime, zone: ZonesEnum) -> TierceResponseModel:
-        """Fetch tierce for a given date and zone.
+    async def request_terce(self, date: datetime, zone: ZoneEnum) -> TerceResponseModel:
+        """Fetch terce for a given date and zone.
 
         Args:
-            date (datetime): Date to fetch messes for.
+            date (datetime): Date to fetch terce for.
             zone (ZonesEnum): Liturgical zone to fetch information for.
 
         Returns:
-            TierceResponseModel: Tierce for the given date and zone.
+            TerceResponseModel: Terce for the given date and zone.
         """
         return await self.__request(
-            url=self.__build_url(date, zone, "tierce"), model=TierceResponseModel
+            url=self.__build_url(date, zone, EntityEnum.TERCE), model=TerceResponseModel
         )
 
-    async def request_vepres(self, date: datetime, zone: ZonesEnum) -> VepresResponseModel:
-        """Fetch vepres for a given date and zone.
+    async def request_vespers(self, date: datetime, zone: ZoneEnum) -> VespersResponseModel:
+        """Fetch vespers for a given date and zone.
 
         Args:
-            date (datetime): Date to fetch messes for.
+            date (datetime): Date to fetch vespers for.
             zone (ZonesEnum): Liturgical zone to fetch information for.
 
         Returns:
-            VepresResponseModel: Vepres for the given date and zone.
+            VespersResponseModel: Vespers for the given date and zone.
         """
         return await self.__request(
-            url=self.__build_url(date, zone, "vepres"), model=VepresResponseModel
+            url=self.__build_url(date, zone, EntityEnum.VESPERS), model=VespersResponseModel
         )
+
+    @t.overload
+    async def request(
+        self, entity: t.Literal[EntityEnum.INFORMATIONS], date: datetime, zone: ZoneEnum
+    ) -> InformationsResponseModel: ...
+    @t.overload
+    async def request(
+        self, entity: t.Literal[EntityEnum.MASS], date: datetime, zone: ZoneEnum
+    ) -> MassesResponseModel: ...
+    @t.overload
+    async def request(
+        self, entity: t.Literal[EntityEnum.COMPLINE], date: datetime, zone: ZoneEnum
+    ) -> ComplinesResponseModel: ...
+    @t.overload
+    async def request(
+        self, entity: t.Literal[EntityEnum.LAUDS], date: datetime, zone: ZoneEnum
+    ) -> LaudsResponseModel: ...
+    @t.overload
+    async def request(
+        self, entity: t.Literal[EntityEnum.READINGS], date: datetime, zone: ZoneEnum
+    ) -> ReadingsResponseModel: ...
+    @t.overload
+    async def request(
+        self, entity: t.Literal[EntityEnum.NONE], date: datetime, zone: ZoneEnum
+    ) -> NoneResponseModel: ...
+    @t.overload
+    async def request(
+        self, entity: t.Literal[EntityEnum.SEXT], date: datetime, zone: ZoneEnum
+    ) -> SextResponseModel: ...
+    @t.overload
+    async def request(
+        self, entity: t.Literal[EntityEnum.TERCE], date: datetime, zone: ZoneEnum
+    ) -> TerceResponseModel: ...
+    @t.overload
+    async def request(
+        self, entity: t.Literal[EntityEnum.VESPERS], date: datetime, zone: ZoneEnum
+    ) -> VespersResponseModel: ...
+    async def request(  # pylint: disable=too-many-return-statements
+        self, entity: EntityEnum, date: datetime, zone: ZoneEnum
+    ) -> (
+        InformationsResponseModel
+        | MassesResponseModel
+        | ComplinesResponseModel
+        | LaudsResponseModel
+        | ReadingsResponseModel
+        | NoneResponseModel
+        | SextResponseModel
+        | TerceResponseModel
+        | VespersResponseModel
+    ):
+        """Fetch vespers for a given date and zone.
+
+        Args:
+            entity (EntityEnum): The liturgical entity to fetch information for.
+            date (datetime): Date to fetch vespers for.
+            zone (ZonesEnum): Liturgical zone to fetch information for.
+
+        Returns:
+            ResponseModel: Response model for the given entity.
+        """
+        match entity:
+            case EntityEnum.INFORMATIONS:
+                return await self.request_informations(date, zone)
+            case EntityEnum.MASS:
+                return await self.request_masses(date, zone)
+            case EntityEnum.COMPLINE:
+                return await self.request_complines(date, zone)
+            case EntityEnum.LAUDS:
+                return await self.request_lauds(date, zone)
+            case EntityEnum.READINGS:
+                return await self.request_readings(date, zone)
+            case EntityEnum.NONE:
+                return await self.request_none(date, zone)
+            case EntityEnum.SEXT:
+                return await self.request_sext(date, zone)
+            case EntityEnum.TERCE:
+                return await self.request_terce(date, zone)
+            case EntityEnum.VESPERS:
+                return await self.request_vespers(date, zone)
+            case _:
+                raise ValueError(f"Unknown entity: {entity}")

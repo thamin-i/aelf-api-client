@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class CouleursEnum(Enum):
+class ColorEnum(Enum):
     BLANC = "blanc"
     ROSE = "rose"
     ROUGE = "rouge"

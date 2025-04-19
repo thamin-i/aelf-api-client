@@ -1,4 +1,5 @@
-from .couleurs import CouleursEnum
-from .zones import ZonesEnum
+from .color import ColorEnum
+from .entity import EntityEnum
+from .zone import ZoneEnum
 
-__all__ = ["CouleursEnum", "ZonesEnum"]
+__all__ = ["ColorEnum", "EntityEnum", "ZoneEnum"]

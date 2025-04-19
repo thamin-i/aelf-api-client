@@ -2,10 +2,10 @@ import typing as t
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from .lecture import LectureModel
+from .reading import LectureModel
 
 
-class MesseModel(BaseModel):
+class MassModel(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     nom: str
