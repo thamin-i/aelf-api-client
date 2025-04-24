@@ -12,9 +12,9 @@ class InformationsModel(BaseModel):
     zone: ZoneEnum
     couleur: ColorEnum
     annee: str | None = Field(default=None)
-    temps_liturgique: str
+    temps_liturgique: str | None = Field(default=None)
     semaine: str | None = Field(default=None)
-    jour: str
+    jour: str | None = Field(default=None)
     jour_liturgique_nom: str
     fete: str
     degre: str

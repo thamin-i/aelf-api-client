@@ -22,5 +22,5 @@ class ReadingsModel(BaseModel):
     titre_patristique: str
     texte_patristique: str
     repons_patristique: str
-    te_deum: t.List[str]
+    te_deum: t.List[str] | TextModel
     oraison: str

@@ -65,7 +65,7 @@ class AELFClient:
         }
         return f"{self.base_url}/v1/{fr_entity_mapping[entity]}/{date.strftime('%Y-%m-%d')}/{zone.value}"  # pylint: disable=line-too-long
 
-    async def __request(self, url: str, model: t.Type[ResponseModel]) -> ResponseModel:
+    async def __request(self, url: str, model: t.Type[ResponseModel]) -> ResponseModel | None:
         """Request the AELF API and return the response model.
 
         Args:
@@ -74,17 +74,19 @@ class AELFClient:
             model (t.Type[ResponseModel]): The response model to validate against.
 
         Returns:
-            ResponseModel: Response for the given endpoint.
+            ResponseModel | None: Response for the given endpoint.
         """
         async with async_timeout.timeout(self.default_timeout):
             async with aiohttp.ClientSession(headers=self.default_headers) as session:
                 async with session.get(url=url) as response:
+                    if response.status == 404:
+                        return None
                     response.raise_for_status()
                     return model.model_validate(await response.json())
 
     async def request_informations(
         self, date: datetime, zone: ZoneEnum
-    ) -> InformationsResponseModel:
+    ) -> InformationsResponseModel | None:
         """Fetch liturgical information for a given date and zone.
 
         Args:
@@ -92,14 +94,14 @@ class AELFClient:
             zone (ZonesEnum): Liturgical zone to fetch information for.
 
         Returns:
-            InformationsResponseModel: Liturgical information for the given date and zone.
+            InformationsResponseModel | None: Liturgical information for the given date and zone.
         """
         return await self.__request(
             url=self.__build_url(date, zone, EntityEnum.INFORMATIONS),
             model=InformationsResponseModel,
         )
 
-    async def request_masses(self, date: datetime, zone: ZoneEnum) -> MassesResponseModel:
+    async def request_masses(self, date: datetime, zone: ZoneEnum) -> MassesResponseModel | None:
         """Fetch masses for a given date and zone.
 
         Args:
@@ -107,13 +109,15 @@ class AELFClient:
             zone (ZonesEnum): Liturgical zone to fetch information for.
 
         Returns:
-            MassesResponseModel: Masses for the given date and zone.
+            MassesResponseModel | None: Masses for the given date and zone.
         """
         return await self.__request(
             url=self.__build_url(date, zone, EntityEnum.MASS), model=MassesResponseModel
         )
 
-    async def request_complines(self, date: datetime, zone: ZoneEnum) -> ComplinesResponseModel:
+    async def request_complines(
+        self, date: datetime, zone: ZoneEnum
+    ) -> ComplinesResponseModel | None:
         """Fetch complines for a given date and zone.
 
         Args:
@@ -121,13 +125,13 @@ class AELFClient:
             zone (ZonesEnum): Liturgical zone to fetch information for.
 
         Returns:
-            ComplinesResponseModel: Complines for the given date and zone.
+            ComplinesResponseModel | None: Complines for the given date and zone.
         """
         return await self.__request(
             url=self.__build_url(date, zone, EntityEnum.COMPLINE), model=ComplinesResponseModel
         )
 
-    async def request_lauds(self, date: datetime, zone: ZoneEnum) -> LaudsResponseModel:
+    async def request_lauds(self, date: datetime, zone: ZoneEnum) -> LaudsResponseModel | None:
         """Fetch lauds for a given date and zone.
 
         Args:
@@ -135,13 +139,15 @@ class AELFClient:
             zone (ZonesEnum): Liturgical zone to fetch information for.
 
         Returns:
-            LaudsResponseModel: Lauds for the given date and zone.
+            LaudsResponseModel | None: Lauds for the given date and zone.
         """
         return await self.__request(
             url=self.__build_url(date, zone, EntityEnum.LAUDS), model=LaudsResponseModel
         )
 
-    async def request_readings(self, date: datetime, zone: ZoneEnum) -> ReadingsResponseModel:
+    async def request_readings(
+        self, date: datetime, zone: ZoneEnum
+    ) -> ReadingsResponseModel | None:
         """Fetch readings for a given date and zone.
 
         Args:
@@ -149,13 +155,13 @@ class AELFClient:
             zone (ZonesEnum): Liturgical zone to fetch information for.
 
         Returns:
-            ReadingsResponseModel: Readings for the given date and zone.
+            ReadingsResponseModel | None: Readings for the given date and zone.
         """
         return await self.__request(
             url=self.__build_url(date, zone, EntityEnum.READINGS), model=ReadingsResponseModel
         )
 
-    async def request_none(self, date: datetime, zone: ZoneEnum) -> NoneResponseModel:
+    async def request_none(self, date: datetime, zone: ZoneEnum) -> NoneResponseModel | None:
         """Fetch none for a given date and zone.
 
         Args:
@@ -163,13 +169,13 @@ class AELFClient:
             zone (ZonesEnum): Liturgical zone to fetch information for.
 
         Returns:
-            NoneResponseModel: none for the given date and zone.
+            NoneResponseModel | None: none for the given date and zone.
         """
         return await self.__request(
             url=self.__build_url(date, zone, EntityEnum.NONE), model=NoneResponseModel
         )
 
-    async def request_sext(self, date: datetime, zone: ZoneEnum) -> SextResponseModel:
+    async def request_sext(self, date: datetime, zone: ZoneEnum) -> SextResponseModel | None:
         """Fetch sext for a given date and zone.
 
         Args:
@@ -177,13 +183,13 @@ class AELFClient:
             zone (ZonesEnum): Liturgical zone to fetch information for.
 
         Returns:
-            SextResponseModel: Sext for the given date and zone.
+            SextResponseModel | None: Sext for the given date and zone.
         """
         return await self.__request(
             url=self.__build_url(date, zone, EntityEnum.SEXT), model=SextResponseModel
         )
 
-    async def request_terce(self, date: datetime, zone: ZoneEnum) -> TerceResponseModel:
+    async def request_terce(self, date: datetime, zone: ZoneEnum) -> TerceResponseModel | None:
         """Fetch terce for a given date and zone.
 
         Args:
@@ -191,13 +197,13 @@ class AELFClient:
             zone (ZonesEnum): Liturgical zone to fetch information for.
 
         Returns:
-            TerceResponseModel: Terce for the given date and zone.
+            TerceResponseModel | None: Terce for the given date and zone.
         """
         return await self.__request(
             url=self.__build_url(date, zone, EntityEnum.TERCE), model=TerceResponseModel
         )
 
-    async def request_vespers(self, date: datetime, zone: ZoneEnum) -> VespersResponseModel:
+    async def request_vespers(self, date: datetime, zone: ZoneEnum) -> VespersResponseModel | None:
         """Fetch vespers for a given date and zone.
 
         Args:
@@ -205,7 +211,7 @@ class AELFClient:
             zone (ZonesEnum): Liturgical zone to fetch information for.
 
         Returns:
-            VespersResponseModel: Vespers for the given date and zone.
+            VespersResponseModel | None: Vespers for the given date and zone.
         """
         return await self.__request(
             url=self.__build_url(date, zone, EntityEnum.VESPERS), model=VespersResponseModel
@@ -214,39 +220,39 @@ class AELFClient:
     @t.overload
     async def request(
         self, entity: t.Literal[EntityEnum.INFORMATIONS], date: datetime, zone: ZoneEnum
-    ) -> InformationsResponseModel: ...
+    ) -> InformationsResponseModel | None: ...
     @t.overload
     async def request(
         self, entity: t.Literal[EntityEnum.MASS], date: datetime, zone: ZoneEnum
-    ) -> MassesResponseModel: ...
+    ) -> MassesResponseModel | None: ...
     @t.overload
     async def request(
         self, entity: t.Literal[EntityEnum.COMPLINE], date: datetime, zone: ZoneEnum
-    ) -> ComplinesResponseModel: ...
+    ) -> ComplinesResponseModel | None: ...
     @t.overload
     async def request(
         self, entity: t.Literal[EntityEnum.LAUDS], date: datetime, zone: ZoneEnum
-    ) -> LaudsResponseModel: ...
+    ) -> LaudsResponseModel | None: ...
     @t.overload
     async def request(
         self, entity: t.Literal[EntityEnum.READINGS], date: datetime, zone: ZoneEnum
-    ) -> ReadingsResponseModel: ...
+    ) -> ReadingsResponseModel | None: ...
     @t.overload
     async def request(
         self, entity: t.Literal[EntityEnum.NONE], date: datetime, zone: ZoneEnum
-    ) -> NoneResponseModel: ...
+    ) -> NoneResponseModel | None: ...
     @t.overload
     async def request(
         self, entity: t.Literal[EntityEnum.SEXT], date: datetime, zone: ZoneEnum
-    ) -> SextResponseModel: ...
+    ) -> SextResponseModel | None: ...
     @t.overload
     async def request(
         self, entity: t.Literal[EntityEnum.TERCE], date: datetime, zone: ZoneEnum
-    ) -> TerceResponseModel: ...
+    ) -> TerceResponseModel | None: ...
     @t.overload
     async def request(
         self, entity: t.Literal[EntityEnum.VESPERS], date: datetime, zone: ZoneEnum
-    ) -> VespersResponseModel: ...
+    ) -> VespersResponseModel | None: ...
     async def request(  # pylint: disable=too-many-return-statements
         self, entity: EntityEnum, date: datetime, zone: ZoneEnum
     ) -> (
@@ -259,6 +265,7 @@ class AELFClient:
         | SextResponseModel
         | TerceResponseModel
         | VespersResponseModel
+        | None
     ):
         """Fetch vespers for a given date and zone.
 
@@ -268,7 +275,7 @@ class AELFClient:
             zone (ZonesEnum): Liturgical zone to fetch information for.
 
         Returns:
-            ResponseModel: Response model for the given entity.
+            ResponseModel | None: Response model for the given entity.
         """
         match entity:
             case EntityEnum.INFORMATIONS:
