@@ -10,7 +10,7 @@ class ReadingsModel(BaseModel):
 
     introduction: str
     hymne: TextModel
-    antienne_1: str
+    antienne_1: str | None = Field(default=None)
     psaume_1: TextModel
     antienne_2: str | None = Field(default=None)
     psaume_2: TextModel
