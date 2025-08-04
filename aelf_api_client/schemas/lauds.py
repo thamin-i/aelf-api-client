@@ -10,9 +10,9 @@ class LaudsModel(BaseModel):
     antienne_invitatoire: str
     psaume_invitatoire: TextModel
     hymne: TextModel
-    antienne_1: str
+    antienne_1: str | None = Field(default=None)
     psaume_1: TextModel
-    antienne_2: str
+    antienne_2: str | None = Field(default=None)
     psaume_2: TextModel
     antienne_3: str | None = Field(default=None)
     psaume_3: TextModel
