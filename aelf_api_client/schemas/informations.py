@@ -17,7 +17,7 @@ class InformationsModel(BaseModel):
     jour: str | None = Field(default=None)
     jour_liturgique_nom: str
     fete: str
-    degre: str
+    degre: str | None = Field(default=None)
     ligne1: str
     ligne2: str
     ligne3: str
